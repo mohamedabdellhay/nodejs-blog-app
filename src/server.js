@@ -2,15 +2,13 @@ const express = require("express");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const { upload } = require("./controllers/fileUpload.js");
-// src/controllers/fileUplod.js
-// const multer = require("multer");
-// const path = require("path");
-// const fs = require("fs");
+const path = require("path");
 const app = express();
 exports.app = app;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // connect to mongodb
 const username = process.env.MONGO_USERNAME;
@@ -28,24 +26,7 @@ mongoose
   });
 //  end connect to mongodb
 
-// middleware
-app.use((req, res, next) => {
-  console.log("Time:", Date.now());
-  next();
-});
-// end middleware
-
-app.post("/upload", upload.single("image"), (req, res) => {
-  // console.log(req.file);
-  console.log(req.filePath);
-  res.send({ message: "Image uploaded!", path: req.filePath, file: req.file });
-});
-
 // routes
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
-// end routes
 
 app.use("/posts", require("./routes/postsRoutes"));
 

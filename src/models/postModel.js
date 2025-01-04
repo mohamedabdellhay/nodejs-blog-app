@@ -13,6 +13,15 @@ const postSchema = new mongoose.Schema({
   author: {
     type: String,
     required: true,
+    trim: true,
+  },
+  postImageDesktop: {
+    type: String,
+    default: "",
+  },
+  postImageMobile: {
+    type: String,
+    default: "",
   },
   createdAt: {
     type: Date,
@@ -20,7 +29,15 @@ const postSchema = new mongoose.Schema({
   },
   updatedAt: {
     type: Date,
-    default: null,
+    default: Date.now,
+  },
+  tags: {
+    type: [String],
+    default: [],
+  },
+  isPublished: {
+    type: Boolean,
+    default: false,
   },
 });
 

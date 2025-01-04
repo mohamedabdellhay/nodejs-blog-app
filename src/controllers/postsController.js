@@ -1,22 +1,31 @@
-// 1) reqiure the model
 const Post = require("../models/postModel");
 
-// 2) create a post
+// create a post
 const createPost = async (req, res) => {
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.content,
-    author: req.body.author,
-  });
   try {
-    const savedPost = await post.save();
-    res.json(savedPost);
-  } catch (err) {
-    res.json({ message: err });
+    const { title, content, author, tags, isPublished } = req.body;
+
+    const postImageDesktop = req.files["postImageDesktop"][0].path;
+    const postImageMobile = req.files["postImageMobile"][0].path;
+
+    const post = new Post({
+      title,
+      content,
+      author,
+      postImageDesktop,
+      postImageMobile,
+      tags: tags ? tags.split(",") : [],
+      isPublished: isPublished || false,
+    });
+
+    await post.save();
+    res.status(201).json(post);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
 
-// 3) get all posts
+// get all posts
 const getAllPosts = async (req, res) => {
   try {
     const searchBy = req.query.sort;
@@ -38,7 +47,7 @@ const getAllPosts = async (req, res) => {
   }
 };
 
-// // get all posts sorted by createdAt
+// get all posts sorted by createdAt
 const getAllPostsSortedByCreatedAt = async (req, res) => {
   try {
     const searchBy = req.query.sort;
@@ -101,7 +110,7 @@ const getAllPostsByAuthor = async (req, res) => {
   }
 };
 
-// 4) get a post by id
+//get a post by id
 const getPostById = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id, { _id: 0, __v: 0 });
@@ -114,7 +123,7 @@ const getPostById = async (req, res) => {
   }
 };
 
-// 5) update a post by id
+// update a post by id
 const updatePostById = async (req, res) => {
   try {
     const updatedPost = await Post.findByIdAndUpdate(
@@ -134,7 +143,7 @@ const updatePostById = async (req, res) => {
   }
 };
 
-// 6) delete a post by id
+// delete a post by id
 const deletePostById = async (req, res) => {
   try {
     const deletedPost = await Post.findByIdAndDelete(req.params.id);
@@ -146,14 +155,12 @@ const deletePostById = async (req, res) => {
     res.json({ message: err });
   }
 };
-// 7) export the model
 
+// export the model
 module.exports = {
   createPost,
   getAllPosts,
-  // getAllPostsSortedByCreatedAt,
-  // getAllPostsSortedByUpdatedAt,
-  // getAllPostsSortedByAuthor,
+
   getAllPostsByAuthor,
   getPostById,
   updatePostById,

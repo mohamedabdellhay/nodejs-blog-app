@@ -1,9 +1,7 @@
+const { upload } = require("../controllers/fileUpload");
 const {
   createPost,
   getAllPosts,
-  // getAllPostsSortedByCreatedAt,
-  // getAllPostsSortedByUpdatedAt,
-  // getAllPostsSortedByAuthor,
   getAllPostsByAuthor,
   getPostById,
   updatePostById,
@@ -12,16 +10,18 @@ const {
 const express = require("express");
 const router = express.Router();
 // create a post
-router.post("/", createPost);
+router.post(
+  "/",
+  upload.fields([
+    { name: "postImageMobile", maxCount: 1 }, // صورة الموبايل
+    { name: "postImageDesktop", maxCount: 1 }, // صورة الكمبيوتر
+  ]),
+  createPost
+);
+
 // get all posts
 router.get("/", getAllPosts);
-// get all posts sorted by createdAt
-// router.get("/createdAt", getAllPostsSortedByCreatedAt);
-// get all posts sorted by updatedAt
-// router.get("/updatedAt", getAllPostsSortedByUpdatedAt);
 // get all posts sorted by author
-// router.get("/author", getAllPostsSortedByAuthor);
-// get all posts by author
 router.get("/author/:author", getAllPostsByAuthor);
 // get a post by id
 router.get("/:id", getPostById);
