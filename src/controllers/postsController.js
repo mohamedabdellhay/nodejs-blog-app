@@ -160,7 +160,6 @@ const deletePostById = async (req, res) => {
 module.exports = {
   createPost,
   getAllPosts,
-
   getAllPostsByAuthor,
   getPostById,
   updatePostById,

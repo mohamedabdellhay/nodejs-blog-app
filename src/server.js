@@ -1,8 +1,8 @@
-const express = require("express");
 require("dotenv").config();
+const express = require("express");
 const mongoose = require("mongoose");
-const { upload } = require("./controllers/fileUpload.js");
 const path = require("path");
+const appModel = require("./models/appModel");
 const app = express();
 exports.app = app;
 
@@ -26,9 +26,22 @@ mongoose
   });
 //  end connect to mongodb
 
-// routes
+// stop app middleware
+app.use(async (req, res, next) => {
+  const appStatus = await appModel.findOne({}, { _id: 0, run: 1 });
+  const run = appStatus.run;
+  if (!run) {
+    return res
+      .status(503)
+      .sendFile(path.join(__dirname, "views/Unavailable.html"));
+  }
 
+  next();
+});
+
+// routes
 app.use("/posts", require("./routes/postsRoutes"));
+app.use("/auth", require("./routes/authRoutes"));
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

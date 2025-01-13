@@ -13,8 +13,8 @@ const router = express.Router();
 router.post(
   "/",
   upload.fields([
-    { name: "postImageMobile", maxCount: 1 }, // صورة الموبايل
-    { name: "postImageDesktop", maxCount: 1 }, // صورة الكمبيوتر
+    { name: "postImageMobile", maxCount: 1 },
+    { name: "postImageDesktop", maxCount: 1 },
   ]),
   createPost
 );
